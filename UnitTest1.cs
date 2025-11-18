@@ -29,7 +29,7 @@ public class BattleshipsTest
     }
     
     [Fact]
-    public void Si_SeAgregaUnJugador_Debe_AumentarElConteoDeJugadoresEnUno()
+    public void Si_SeAgregaUnUnicoJugador_Debe_ElConteoDeJugadoresSerUno()
     {
         //Arrange
         var batallaNaval = new BatallaNaval();
@@ -39,8 +39,9 @@ public class BattleshipsTest
         
         //Assert
         batallaNaval.cantidadJugadores.Should().Be(1);
-
     }
+    
+    
 }
 
 public class BatallaNaval
@@ -64,6 +65,6 @@ public class BatallaNaval
 
     public void AddPlayer()
     {
-        
+        cantidadJugadores = 1;
     }
 }
