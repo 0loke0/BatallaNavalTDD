@@ -40,6 +40,7 @@ public class BattleshipsTest
         //Assert
         batallaNaval.cantidadJugadores.Should().Be(1);
     }
+    
     [Fact]
     public void Si_SeAgregaDosJugadores_Debe_ElConteoDeJugadoresSerDos()
     {
@@ -52,7 +53,31 @@ public class BattleshipsTest
         
         //Assert
         batallaNaval.cantidadJugadores.Should().Be(2);
+    }
 
+    [Fact] public void Si_ElJugador1AgregaUnaCañoneraEnPosicion0_0_Debe_AparecerEnElTableroDelJugador1LaPosicion0_0LaCañonera()
+    {
+        //Arrange
+        var batallaNaval = new BatallaNaval();
+        batallaNaval.AddPlayer();
+
+        //Act
+        batallaNaval.ColocarBarco(jugador: 1,fila: 0,columna: 0,tipo:'g');
+        string tablero = batallaNaval.Print();
+        
+        //Assert 
+        string tableroEsperado = "   | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |\n" +
+                                 " 0 | g |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 1 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 2 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 3 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 4 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 5 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 6 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 7 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 8 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 9 |   |   |   |   |   |   |   |   |   |   |\n";
+        tablero.Should().Be(tableroEsperado);
     }
     
     
@@ -80,5 +105,10 @@ public class BatallaNaval
     public void AddPlayer()
     {
         cantidadJugadores++;
+    }
+
+    public void ColocarBarco(int jugador, int fila, int columna, char tipo)
+    {
+        
     }
 }
