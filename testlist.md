@@ -1,0 +1,1 @@
+﻿[ ] si se crea un tablero como cuadricula 10 x 10 debe mostrar un tablero vacio con cuadricula 10 x 10 
