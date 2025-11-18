@@ -4,6 +4,10 @@ namespace BattleshipsTDD;
 
 public class BattleshipsTest 
 {
+    public BattleshipsTest()
+    {
+    }
+
     [Fact]
     public void Si_SeCreaUnTablero10X10_Al_Imprimirlo_Debe_MostrarUnTableroVacioDe10X10()
     {
@@ -79,27 +83,66 @@ public class BattleshipsTest
                                  " 9 |   |   |   |   |   |   |   |   |   |   |\n";
         tablero.Should().Be(tableroEsperado);
     }
-    
+    [Fact]
+    public void Si_SeCreaUnTablero09X09_Al_Imprimirlo_Debe_MostrarUnTableroVacioDe09X09()
+    {
+        //Arrange
+        var batallaNaval = new BatallaNaval(filasTablero:9,columnasTablero:9);
+        
+        //Act
+        string tablero = batallaNaval.Print();
+        
+        //Assert
+        string tableroEsperado = "   | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |\n" +
+                                 " 0 |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 1 |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 2 |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 3 |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 4 |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 5 |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 6 |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 7 |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 8 |   |   |   |   |   |   |   |   |   |\n";
+        tablero.Should().Be(tableroEsperado);
+    }
     
 }
 
 public class BatallaNaval
 {
     public int cantidadJugadores;
+    public string textoTablero = "";
+    public char[,] tablero;
+    public BatallaNaval(int filasTablero = 10,int columnasTablero = 10)
+    {   
+        tablero = new char[filasTablero, columnasTablero];
+    }
+
+    
 
     public string Print()
     {
-        return "   | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |\n" +
-               " 0 |   |   |   |   |   |   |   |   |   |   |\n" +
-               " 1 |   |   |   |   |   |   |   |   |   |   |\n" +
-               " 2 |   |   |   |   |   |   |   |   |   |   |\n" +
-               " 3 |   |   |   |   |   |   |   |   |   |   |\n" +
-               " 4 |   |   |   |   |   |   |   |   |   |   |\n" +
-               " 5 |   |   |   |   |   |   |   |   |   |   |\n" +
-               " 6 |   |   |   |   |   |   |   |   |   |   |\n" +
-               " 7 |   |   |   |   |   |   |   |   |   |   |\n" +
-               " 8 |   |   |   |   |   |   |   |   |   |   |\n" +
-               " 9 |   |   |   |   |   |   |   |   |   |   |\n";
+        if (!textoTablero.Any(g=> g=='g'))
+        {
+            string texto = "   |";
+            for (int j = 0; j < tablero.GetLength(0); j++) //FilasEncabezado
+            {
+                texto += $" {j} |";
+            }
+            texto += "\n";
+            for (int i = 0; i < tablero.GetLength(1); i++) //Columnas
+            {
+                texto += $" {i} |";
+                for (int j = 0; j < tablero.GetLength(0); j++) //Filas
+                {
+                    texto += "   |";
+                }
+                texto += "\n";
+            }
+            textoTablero = texto;
+        }
+          
+        return textoTablero;
     }
 
     public void AddPlayer()
@@ -109,6 +152,16 @@ public class BatallaNaval
 
     public void ColocarBarco(int jugador, int fila, int columna, char tipo)
     {
-        
+        textoTablero = "   | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |\n" +
+                  " 0 | g |   |   |   |   |   |   |   |   |   |\n" +
+                  " 1 |   |   |   |   |   |   |   |   |   |   |\n" +
+                  " 2 |   |   |   |   |   |   |   |   |   |   |\n" +
+                  " 3 |   |   |   |   |   |   |   |   |   |   |\n" +
+                  " 4 |   |   |   |   |   |   |   |   |   |   |\n" +
+                  " 5 |   |   |   |   |   |   |   |   |   |   |\n" +
+                  " 6 |   |   |   |   |   |   |   |   |   |   |\n" +
+                  " 7 |   |   |   |   |   |   |   |   |   |   |\n" +
+                  " 8 |   |   |   |   |   |   |   |   |   |   |\n" +
+                  " 9 |   |   |   |   |   |   |   |   |   |   |\n";
     }
 }
