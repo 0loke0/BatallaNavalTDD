@@ -40,6 +40,20 @@ public class BattleshipsTest
         //Assert
         batallaNaval.cantidadJugadores.Should().Be(1);
     }
+    [Fact]
+    public void Si_SeAgregaDosJugadores_Debe_ElConteoDeJugadoresSerDos()
+    {
+        //Arrange
+        var batallaNaval = new BatallaNaval();
+        
+        //Act
+        batallaNaval.AddPlayer();
+        batallaNaval.AddPlayer();
+        
+        //Assert
+        batallaNaval.cantidadJugadores.Should().Be(2);
+
+    }
     
     
 }
