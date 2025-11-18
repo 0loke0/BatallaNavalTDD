@@ -141,35 +141,41 @@ public class BatallaNaval
     public BatallaNaval(int filasTablero = 10,int columnasTablero = 10)
     {   
         tablero = new char[filasTablero, columnasTablero];
+        for (int i = 0; i <tablero.GetLength(1); i++) {
+            for (int j = 0; j < tablero.GetLength(0); j++) {
+                tablero[i,j]= ' ';
+            }
+        }
     }
 
     
 
     public string Print()
     {
-        if (!textoTablero.Any(g=> g=='g'))
+        string texto = "   |";
+        for (int j = 0; j < tablero.GetLength(0); j++) //FilasEncabezado
         {
-            string texto = "   |";
-            for (int j = 0; j < tablero.GetLength(0); j++) //FilasEncabezado
+            texto += $" {j} |";
+        }
+        texto += "\n";
+        
+        for (int i = 0; i < tablero.GetLength(1); i++) //Columnas
+        {
+            texto += $" {i} |";
+            for (int j = 0; j < tablero.GetLength(0); j++) //Filas
             {
-                texto += $" {j} |";
+                texto += $" {tablero[j,i]} |";
             }
             texto += "\n";
-            for (int i = 0; i < tablero.GetLength(1); i++) //Columnas
-            {
-                texto += $" {i} |";
-                for (int j = 0; j < tablero.GetLength(0); j++) //Filas
-                {
-                    texto += "   |";
-                }
-                texto += "\n";
-            }
-            textoTablero = texto;
         }
+        textoTablero = texto;
+        
           
         return textoTablero;
     }
-
+    
+    
+    
     public void AddPlayer()
     {
         cantidadJugadores++;
@@ -177,16 +183,6 @@ public class BatallaNaval
 
     public void ColocarBarco(int jugador, int fila, int columna, char tipo)
     {
-        textoTablero = "   | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |\n" +
-                  " 0 | g |   |   |   |   |   |   |   |   |   |\n" +
-                  " 1 |   |   |   |   |   |   |   |   |   |   |\n" +
-                  " 2 |   |   |   |   |   |   |   |   |   |   |\n" +
-                  " 3 |   |   |   |   |   |   |   |   |   |   |\n" +
-                  " 4 |   |   |   |   |   |   |   |   |   |   |\n" +
-                  " 5 |   |   |   |   |   |   |   |   |   |   |\n" +
-                  " 6 |   |   |   |   |   |   |   |   |   |   |\n" +
-                  " 7 |   |   |   |   |   |   |   |   |   |   |\n" +
-                  " 8 |   |   |   |   |   |   |   |   |   |   |\n" +
-                  " 9 |   |   |   |   |   |   |   |   |   |   |\n";
+        tablero[fila,columna] = tipo;
     }
 }
