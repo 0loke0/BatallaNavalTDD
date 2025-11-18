@@ -106,6 +106,31 @@ public class BattleshipsTest
         tablero.Should().Be(tableroEsperado);
     }
     
+    [Fact] public void Si_ElJugador1AgregaUnaCañoneraEnPosicion1_1_Debe_AparecerEnElTableroDelJugador1LaPosicion1_1LaCañonera()
+    {
+        //Arrange
+        var batallaNaval = new BatallaNaval();
+        batallaNaval.AddPlayer();
+
+        //Act
+        batallaNaval.ColocarBarco(jugador: 1,fila: 1,columna: 1,tipo:'g');
+        string tablero = batallaNaval.Print();
+        
+        //Assert 
+        string tableroEsperado = "   | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |\n" +
+                                 " 0 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 1 |   | g |   |   |   |   |   |   |   |   |\n" +
+                                 " 2 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 3 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 4 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 5 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 6 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 7 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 8 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 9 |   |   |   |   |   |   |   |   |   |   |\n";
+        tablero.Should().Be(tableroEsperado);
+    }
+    
 }
 
 public class BatallaNaval
