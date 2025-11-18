@@ -79,6 +79,6 @@ public class BatallaNaval
 
     public void AddPlayer()
     {
-        cantidadJugadores = 1;
+        cantidadJugadores++;
     }
 }
