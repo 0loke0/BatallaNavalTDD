@@ -263,12 +263,49 @@ public class BattleshipsTest
                                  " 9 |   |   |   |   |   |   |   |   |   |   |\n";
         tablero.Should().Be(tableroEsperado);
     }
+
+    [Fact]
+    public void
+        Si_AlIniciaLaPartidaElPrimerJugadorAtacaEnPosicion2_2_Y_FinalizaElTurno_Y_SegundoJugadorAtacaEnPosicion1_1_Debe_MostrarEnElTableroDelJugador2ComoLaUnicaPosicionAtacada_2_2()
+    {
+        //Arrange
+        var batallaNaval = new BatallaNaval();
+        batallaNaval.AddPlayer();
+        batallaNaval.AddPlayer();
+        batallaNaval.AddPlayer();
+        batallaNaval.ColocarBarco(jugador: 1,fila: 3,columna: 3,tipo:TipoBarco.Cañonero);
+        batallaNaval.ColocarBarco(jugador: 2,fila: 1,columna: 1,tipo:TipoBarco.Cañonero);
+        batallaNaval.Start();
+        batallaNaval.Fire(fila: 2,columna: 2);// ataque jugador 1 => mod al 2
+        batallaNaval.EndTurn();
+        batallaNaval.Fire(fila: 1,columna: 1);// ataque jugador 2 => mod al 1
+         
+        //Act
+        
+        string tablero = batallaNaval.Print(jugador:2);
+        
+        
+        //Assert 
+        string tableroEsperado = "   | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |\n" +
+                                 " 0 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 1 |   | g |   |   |   |   |   |   |   |   |\n" +
+                                 " 2 |   |   | o |   |   |   |   |   |   |   |\n" +
+                                 " 3 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 4 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 5 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 6 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 7 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 8 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 9 |   |   |   |   |   |   |   |   |   |   |\n";
+        tablero.Should().Be(tableroEsperado);
+    }
 }
 
 public class BatallaNaval
 {
     private char[,] _tableroGenerico;
     private Dictionary<int, char [,]> _jugadores = new ();
+    private int _jugadorActual;
     
     public BatallaNaval(int filasTablero = 10,int columnasTablero = 10)
     {
@@ -353,6 +390,22 @@ public class BatallaNaval
             TipoBarco.Destructor => 3,
             TipoBarco.Cañonero => 1
         };
+
+    public void Start()
+    {
+        _jugadorActual = 1;
+    }
+
+    public void Fire(int fila, int columna)
+    {
+        var tableroJugador= ObtenerTableroJugador(_jugadorActual+1);
+        tableroJugador[columna,fila] = 'o';
+    }
+
+    public void EndTurn()
+    {
+        _jugadorActual++;
+    }
 }
 
 public enum TipoOrientacion

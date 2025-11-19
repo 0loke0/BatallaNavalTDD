@@ -7,3 +7,5 @@ un jugador tiene dos tableros, quisas evoluciona en una clase
 al colocar barcos se pueden sobre poner en ellos
 
 No se puede colocar barcos ni pintar tableros de jugadores que no existan
+la partida no deberia iniciar si todos los jugadores no tienen barcos en su tablero
+se debe evaluar que no se dispare fuera del tablero
