@@ -66,7 +66,7 @@ public class BattleshipsTest
         batallaNaval.AddPlayer();
 
         //Act
-        batallaNaval.ColocarBarco(jugador: 1,columna: 0,fila: 0, tipo: 'g');
+        batallaNaval.ColocarBarco(jugador: 1,columna: 0,fila: 0, tipo:TipoBarco.Cañonero);
         string tablero = batallaNaval.Print();
         
         //Assert 
@@ -113,7 +113,7 @@ public class BattleshipsTest
         batallaNaval.AddPlayer();
 
         //Act
-        batallaNaval.ColocarBarco(jugador: 1,columna: 1,fila: 1, tipo: 'g');
+        batallaNaval.ColocarBarco(jugador: 1,columna: 1,fila: 1, tipo: TipoBarco.Cañonero);
         string tablero = batallaNaval.Print();
         
         //Assert 
@@ -139,7 +139,7 @@ public class BattleshipsTest
         batallaNaval.AddPlayer();
 
         //Act
-        batallaNaval.ColocarBarco(jugador: 1,fila: 1,columna: 1,tipo:'d', orientacion: "horizontal");
+        batallaNaval.ColocarBarco(jugador: 1,fila: 1,columna: 1,tipo:TipoBarco.Destructor, orientacion: TipoOrientacion.Horizontal);
         string tablero = batallaNaval.Print();
         
         //Assert 
@@ -164,7 +164,7 @@ public class BattleshipsTest
         batallaNaval.AddPlayer();
 
         //Act
-        batallaNaval.ColocarBarco(jugador: 1,fila: 1,columna: 1,tipo:'d', orientacion: "vertical");
+        batallaNaval.ColocarBarco(jugador: 1,fila: 1,columna: 1,tipo:TipoBarco.Destructor, orientacion: TipoOrientacion.Vertical);
         string tablero = batallaNaval.Print();
         
         //Assert 
@@ -189,7 +189,7 @@ public class BattleshipsTest
         batallaNaval.AddPlayer();
 
         //Act
-        batallaNaval.ColocarBarco(jugador: 1,fila: 1,columna: 1,tipo:'c', orientacion: "vertical");
+        batallaNaval.ColocarBarco(jugador: 1,fila: 1,columna: 1,tipo:TipoBarco.PortaAviones, orientacion: TipoOrientacion.Vertical);
         string tablero = batallaNaval.Print();
         
         //Assert 
@@ -214,7 +214,7 @@ public class BattleshipsTest
         batallaNaval.AddPlayer();
 
         //Act
-        batallaNaval.ColocarBarco(jugador: 1,fila: 1,columna: 1,tipo:'c', orientacion: "horizontal");
+        batallaNaval.ColocarBarco(jugador: 1,fila: 1,columna: 1,tipo:TipoBarco.PortaAviones, orientacion: TipoOrientacion.Horizontal);
         string tablero = batallaNaval.Print();
         
         //Assert 
@@ -281,39 +281,38 @@ public class BatallaNaval
         cantidadJugadores++;
     }
 
-    public void ColocarBarco(int jugador, int columna, int fila, char tipo, string? orientacion = null)
+    public void ColocarBarco(int jugador, int columna, int fila, TipoBarco tipo, TipoOrientacion? orientacion = null)
     {
+        var longitudDelBarco = CalcularLogitudBarco(tipo);
         
-        tablero[columna,fila] = tipo;
-        
-        
-        if (tipo == 'd' && orientacion == "vertical")
+        while (longitudDelBarco is not 0)
         {
-            for (int i = 0; i < 3; i++)
-            {
-                tablero[columna+i,fila] = tipo;
-            }
-        }
-        if (tipo == 'd' && orientacion == "horizontal")
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                tablero[columna,fila+i] = tipo;
-            }
-        }
-        if (tipo == 'c' && orientacion == "vertical")
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                tablero[columna+i,fila] = tipo;
-            }
-        }
-        if (tipo == 'c' && orientacion == "horizontal")
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                tablero[columna,fila+i] = tipo;
-            }
+            tablero[columna,fila] = (char)tipo;
+            if (orientacion == TipoOrientacion.Vertical)
+                columna++;
+            if (orientacion == TipoOrientacion.Horizontal)
+                fila++;
+            longitudDelBarco--;
         }
     }
+
+    private static int CalcularLogitudBarco(TipoBarco tipo) =>
+        tipo switch
+        {
+            TipoBarco.PortaAviones => 4,
+            TipoBarco.Destructor => 3,
+            TipoBarco.Cañonero => 1
+        };
+}
+
+public enum TipoOrientacion
+{
+    Vertical,
+    Horizontal
+}
+public enum TipoBarco
+{
+    PortaAviones = 'c',
+    Destructor = 'd',
+    Cañonero = 'g'
 }
