@@ -13,7 +13,7 @@ public class BattleshipsTest
     {
         //Arrange
         var batallaNaval = new BatallaNaval();
-        
+        batallaNaval.AddPlayer();
         //Act
         string tablero = batallaNaval.Print();
         
@@ -88,7 +88,7 @@ public class BattleshipsTest
     {
         //Arrange
         var batallaNaval = new BatallaNaval(filasTablero:9,columnasTablero:9);
-        
+        batallaNaval.AddPlayer();        
         //Act
         string tablero = batallaNaval.Print();
         
@@ -260,71 +260,101 @@ public class BattleshipsTest
         tablero.Should().Be(tableroEsperado);
     }
     
+    [Fact] 
+    public void Si_ElJugador1AgregaUnaCañoneroEnPosicion1_1_y_El_jugador2AgregaUnaCañoneroEnPosicion2_2Y_El_jugador3AgregaUnaCañoneroEnPosicion3_3_Debe_AparecerEnElTableroDelJugador3UnicamenteEnLaPosicion3_3UnaCañonero()
+    {
+        //Arrange
+        var batallaNaval = new BatallaNaval();
+        batallaNaval.AddPlayer();
+        batallaNaval.AddPlayer();
+        batallaNaval.AddPlayer();
+
+        //Act
+        batallaNaval.ColocarBarco(jugador: 1,fila: 1,columna: 1,tipo:TipoBarco.Cañonero);
+        batallaNaval.ColocarBarco(jugador: 2,fila: 2,columna: 2,tipo:TipoBarco.Cañonero);
+        batallaNaval.ColocarBarco(jugador: 3,fila: 3,columna: 3,tipo:TipoBarco.Cañonero);
+        string tablero = batallaNaval.Print(jugador:3);
+        
+        //Assert 
+        string tableroEsperado = "   | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |\n" +
+                                 " 0 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 1 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 2 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 3 |   |   |   | g |   |   |   |   |   |   |\n" +
+                                 " 4 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 5 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 6 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 7 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 8 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 9 |   |   |   |   |   |   |   |   |   |   |\n";
+        tablero.Should().Be(tableroEsperado);
+    }
 }
 
 public class BatallaNaval
 {
-    public int cantidadJugadores;
+    public int cantidadJugadores = 0;
     public string textoTablero = "";
-    public char[,] tableroJugador1;
-    public char[,] tableroJugador2;
+    public char[,] tableroGenerico;
+    public Dictionary<int, char [,]> jugadores = new ();
+    
     public BatallaNaval(int filasTablero = 10,int columnasTablero = 10)
-    {   
-        tableroJugador1 = new char[filasTablero, columnasTablero];
-        tableroJugador2 = new char[filasTablero, columnasTablero];
-        for (int i = 0; i <tableroJugador1.GetLength(1); i++) {
-            for (int j = 0; j < tableroJugador1.GetLength(0); j++) {
-                tableroJugador1[i,j]= ' ';
-            }
-        }
-        for (int i = 0; i <tableroJugador2.GetLength(1); i++) {
-            for (int j = 0; j < tableroJugador2.GetLength(0); j++) {
-                tableroJugador2[i,j]= ' ';
+    {
+        tableroGenerico = new char[filasTablero, columnasTablero];
+        LlenarTableroGenericoConEspacios();
+    }
+    private void LlenarTableroGenericoConEspacios()
+    {
+        for (int i = 0; i <tableroGenerico.GetLength(1); i++) {
+            for (int j = 0; j < tableroGenerico.GetLength(0); j++) {
+                tableroGenerico[i,j]= ' ';
             }
         }
     }
-
-    
-
     public string Print(int jugador = 1)
     { 
-        char[,] tableroJugador = jugador == 1 ? tableroJugador1 : tableroJugador2;
+        char[,] tableroJugadorSeleccionado = ObtenerTableroJugador(jugador);
         // | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |\n
         string texto = "   |";
-        for (int j = 0; j < tableroJugador.GetLength(0); j++) //FilasEncabezado
+        for (int j = 0; j < tableroJugadorSeleccionado.GetLength(0); j++) //FilasEncabezado
         {
             texto += $" {j} |";
         }
         texto += "\n";
         
-        for (int x = 0; x < tableroJugador.GetLength(1); x++) //Columnas
+        for (int x = 0; x < tableroJugadorSeleccionado.GetLength(1); x++) //Columnas
         {
             texto += $" {x} |";
-            for (int y = 0; y < tableroJugador.GetLength(0); y++) //Filas
+            for (int y = 0; y < tableroJugadorSeleccionado.GetLength(0); y++) //Filas
             {
-                texto += $" {tableroJugador[x,y]} |";
+                texto += $" {tableroJugadorSeleccionado[x,y]} |";
             }
             texto += "\n";
         }
         textoTablero = texto;
         
-          
         return textoTablero;
     }
-    
+
+    private char[,] ObtenerTableroJugador(int jugador)
+    {
+        return jugadores.GetValueOrDefault(jugador)!;
+    }
+
     public void AddPlayer()
     {
         cantidadJugadores++;
+        jugadores.Add(cantidadJugadores, (char[,])tableroGenerico.Clone());
     }
 
     public void ColocarBarco(int jugador, int columna, int fila, TipoBarco tipo, TipoOrientacion? orientacion = null)
     {
         var longitudDelBarco = CalcularLogitudBarco(tipo);
-       
-        char[,] tableroActual = jugador == 1 ? tableroJugador1 : tableroJugador2;
+        char[,] tableroActual = ObtenerTableroJugador(jugador);
+        
         while (longitudDelBarco is not 0)
         {
-            tableroActual[columna,fila] = (char)tipo;
+            tableroActual![columna,fila] = (char)tipo;
             if (orientacion == TipoOrientacion.Vertical)
                 columna++;
             if (orientacion == TipoOrientacion.Horizontal)
