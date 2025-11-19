@@ -231,6 +231,34 @@ public class BattleshipsTest
                                  " 9 |   |   |   |   |   |   |   |   |   |   |\n";
         tablero.Should().Be(tableroEsperado);
     }
+
+    [Fact] 
+    public void Si_ElJugador1AgregaUnaCañoneroEnPosicion1_1_y_El_jugador2AgregaUnaCañoneroEnPosicion2_2_Debe_AparecerEnElTableroDelJugador2UnicamenteEnLaPosicion2_2UnaCañonero()
+    {
+        //Arrange
+        var batallaNaval = new BatallaNaval();
+        batallaNaval.AddPlayer();
+        batallaNaval.AddPlayer();
+
+        //Act
+        batallaNaval.ColocarBarco(jugador: 1,fila: 1,columna: 1,tipo:TipoBarco.Cañonero);
+        batallaNaval.ColocarBarco(jugador: 2,fila: 2,columna: 2,tipo:TipoBarco.Cañonero);
+        string tablero = batallaNaval.Print(jugador:2);
+        
+        //Assert 
+        string tableroEsperado = "   | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |\n" +
+                                 " 0 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 1 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 2 |   |   | g |   |   |   |   |   |   |   |\n" +
+                                 " 3 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 4 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 5 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 6 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 7 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 8 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 9 |   |   |   |   |   |   |   |   |   |   |\n";
+        tablero.Should().Be(tableroEsperado);
+    }
     
 }
 
@@ -238,35 +266,43 @@ public class BatallaNaval
 {
     public int cantidadJugadores;
     public string textoTablero = "";
-    public char[,] tablero;
+    public char[,] tableroJugador1;
+    public char[,] tableroJugador2;
     public BatallaNaval(int filasTablero = 10,int columnasTablero = 10)
     {   
-        tablero = new char[filasTablero, columnasTablero];
-        for (int i = 0; i <tablero.GetLength(1); i++) {
-            for (int j = 0; j < tablero.GetLength(0); j++) {
-                tablero[i,j]= ' ';
+        tableroJugador1 = new char[filasTablero, columnasTablero];
+        tableroJugador2 = new char[filasTablero, columnasTablero];
+        for (int i = 0; i <tableroJugador1.GetLength(1); i++) {
+            for (int j = 0; j < tableroJugador1.GetLength(0); j++) {
+                tableroJugador1[i,j]= ' ';
+            }
+        }
+        for (int i = 0; i <tableroJugador2.GetLength(1); i++) {
+            for (int j = 0; j < tableroJugador2.GetLength(0); j++) {
+                tableroJugador2[i,j]= ' ';
             }
         }
     }
 
     
 
-    public string Print()
+    public string Print(int jugador = 1)
     { 
+        char[,] tableroJugador = jugador == 1 ? tableroJugador1 : tableroJugador2;
         // | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |\n
         string texto = "   |";
-        for (int j = 0; j < tablero.GetLength(0); j++) //FilasEncabezado
+        for (int j = 0; j < tableroJugador.GetLength(0); j++) //FilasEncabezado
         {
             texto += $" {j} |";
         }
         texto += "\n";
         
-        for (int x = 0; x < tablero.GetLength(1); x++) //Columnas
+        for (int x = 0; x < tableroJugador.GetLength(1); x++) //Columnas
         {
             texto += $" {x} |";
-            for (int y = 0; y < tablero.GetLength(0); y++) //Filas
+            for (int y = 0; y < tableroJugador.GetLength(0); y++) //Filas
             {
-                texto += $" {tablero[x,y]} |";
+                texto += $" {tableroJugador[x,y]} |";
             }
             texto += "\n";
         }
@@ -284,16 +320,17 @@ public class BatallaNaval
     public void ColocarBarco(int jugador, int columna, int fila, TipoBarco tipo, TipoOrientacion? orientacion = null)
     {
         var longitudDelBarco = CalcularLogitudBarco(tipo);
-        
+       
+        char[,] tableroActual = jugador == 1 ? tableroJugador1 : tableroJugador2;
         while (longitudDelBarco is not 0)
         {
-            tablero[columna,fila] = (char)tipo;
+            tableroActual[columna,fila] = (char)tipo;
             if (orientacion == TipoOrientacion.Vertical)
                 columna++;
             if (orientacion == TipoOrientacion.Horizontal)
                 fila++;
             longitudDelBarco--;
-        }
+        }   
     }
 
     private static int CalcularLogitudBarco(TipoBarco tipo) =>
