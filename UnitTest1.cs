@@ -157,6 +157,56 @@ public class BattleshipsTest
         tablero.Should().Be(tableroEsperado);
     }
     
+    [Fact] public void Si_ElJugador1AgregaUnDestructorEnPosicion1_1ConOrientacionVertical_Debe_AparecerEnElTableroDelJugador1LaPosicion1_1Y2_1Y3_1ElDestructor()
+    {
+        //Arrange
+        var batallaNaval = new BatallaNaval();
+        batallaNaval.AddPlayer();
+
+        //Act
+        batallaNaval.ColocarBarco(jugador: 1,fila: 1,columna: 1,tipo:'d', orientacion: "vertical");
+        string tablero = batallaNaval.Print();
+        
+        //Assert 
+        string tableroEsperado = "   | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |\n" +
+                                 " 0 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 1 |   | d |   |   |   |   |   |   |   |   |\n" +
+                                 " 2 |   | d |   |   |   |   |   |   |   |   |\n" +
+                                 " 3 |   | d |   |   |   |   |   |   |   |   |\n" +
+                                 " 4 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 5 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 6 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 7 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 8 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 9 |   |   |   |   |   |   |   |   |   |   |\n";
+        tablero.Should().Be(tableroEsperado);
+    }
+    
+    [Fact] public void Si_ElJugador1AgregaUnPortaavionesEnPosicion1_1ConOrientacionVertical_Debe_AparecerEnElTableroDelJugador1LaPosicion1_1Y2_1Y3_1Y4_1ElPortaaviones()
+    {
+        //Arrange
+        var batallaNaval = new BatallaNaval();
+        batallaNaval.AddPlayer();
+
+        //Act
+        batallaNaval.ColocarBarco(jugador: 1,fila: 1,columna: 1,tipo:'c', orientacion: "vertical");
+        string tablero = batallaNaval.Print();
+        
+        //Assert 
+        string tableroEsperado = "   | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |\n" +
+                                 " 0 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 1 |   | c |   |   |   |   |   |   |   |   |\n" +
+                                 " 2 |   | c |   |   |   |   |   |   |   |   |\n" +
+                                 " 3 |   | c |   |   |   |   |   |   |   |   |\n" +
+                                 " 4 |   | c |   |   |   |   |   |   |   |   |\n" +
+                                 " 5 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 6 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 7 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 8 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 9 |   |   |   |   |   |   |   |   |   |   |\n";
+        tablero.Should().Be(tableroEsperado);
+    }
+    
 }
 
 public class BatallaNaval
@@ -208,13 +258,30 @@ public class BatallaNaval
 
     public void ColocarBarco(int jugador, int columna, int fila, char tipo, string? orientacion = null)
     {
+        
         tablero[columna,fila] = tipo;
-
-        if (tipo == 'd')
+        
+        
+        if (tipo == 'd' && orientacion == "vertical")
         {
-            tablero[1,1] = tipo;      
-            tablero[1,2] = tipo;      
-            tablero[1,3] = tipo;      
+            for (int i = 0; i < 3; i++)
+            {
+                tablero[columna+i,fila] = tipo;
+            }
+        }
+        if (tipo == 'd' && orientacion == "horizontal")
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                tablero[columna,fila+i] = tipo;
+            }
+        }
+        if (tipo == 'c' && orientacion == "vertical")
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                tablero[columna+i,fila] = tipo;
+            }
         }
     }
 }
