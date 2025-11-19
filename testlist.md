@@ -2,3 +2,5 @@
 
 una partida no puede iniciar si no existen jugadores
 segun la orientacion del barco no se debe salir del limite del mapa 
+
+un jugador tiene dos tableros, quisas evoluciona en una clase 

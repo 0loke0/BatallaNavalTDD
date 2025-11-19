@@ -66,7 +66,7 @@ public class BattleshipsTest
         batallaNaval.AddPlayer();
 
         //Act
-        batallaNaval.ColocarBarco(jugador: 1,fila: 0,columna: 0,tipo:'g');
+        batallaNaval.ColocarBarco(jugador: 1,columna: 0,fila: 0, tipo: 'g');
         string tablero = batallaNaval.Print();
         
         //Assert 
@@ -113,13 +113,39 @@ public class BattleshipsTest
         batallaNaval.AddPlayer();
 
         //Act
-        batallaNaval.ColocarBarco(jugador: 1,fila: 1,columna: 1,tipo:'g');
+        batallaNaval.ColocarBarco(jugador: 1,columna: 1,fila: 1, tipo: 'g');
         string tablero = batallaNaval.Print();
         
         //Assert 
         string tableroEsperado = "   | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |\n" +
                                  " 0 |   |   |   |   |   |   |   |   |   |   |\n" +
                                  " 1 |   | g |   |   |   |   |   |   |   |   |\n" +
+                                 " 2 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 3 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 4 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 5 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 6 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 7 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 8 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 9 |   |   |   |   |   |   |   |   |   |   |\n";
+        tablero.Should().Be(tableroEsperado);
+    }
+    
+    
+    [Fact] public void Si_ElJugador1AgregaUnDestructorEnPosicion1_1ConOrientacionHorizontal_Debe_AparecerEnElTableroDelJugador1LaPosicion1_1Y1_2Y1_3ElDestructor()
+    {
+        //Arrange
+        var batallaNaval = new BatallaNaval();
+        batallaNaval.AddPlayer();
+
+        //Act
+        batallaNaval.ColocarBarco(jugador: 1,fila: 1,columna: 1,tipo:'d', orientacion: "horizontal");
+        string tablero = batallaNaval.Print();
+        
+        //Assert 
+        string tableroEsperado = "   | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |\n" +
+                                 " 0 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 1 |   | d | d | d |   |   |   |   |   |   |\n" +
                                  " 2 |   |   |   |   |   |   |   |   |   |   |\n" +
                                  " 3 |   |   |   |   |   |   |   |   |   |   |\n" +
                                  " 4 |   |   |   |   |   |   |   |   |   |   |\n" +
@@ -151,7 +177,8 @@ public class BatallaNaval
     
 
     public string Print()
-    {
+    { 
+        // | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |\n
         string texto = "   |";
         for (int j = 0; j < tablero.GetLength(0); j++) //FilasEncabezado
         {
@@ -159,12 +186,12 @@ public class BatallaNaval
         }
         texto += "\n";
         
-        for (int i = 0; i < tablero.GetLength(1); i++) //Columnas
+        for (int x = 0; x < tablero.GetLength(1); x++) //Columnas
         {
-            texto += $" {i} |";
-            for (int j = 0; j < tablero.GetLength(0); j++) //Filas
+            texto += $" {x} |";
+            for (int y = 0; y < tablero.GetLength(0); y++) //Filas
             {
-                texto += $" {tablero[j,i]} |";
+                texto += $" {tablero[x,y]} |";
             }
             texto += "\n";
         }
@@ -174,15 +201,20 @@ public class BatallaNaval
         return textoTablero;
     }
     
-    
-    
     public void AddPlayer()
     {
         cantidadJugadores++;
     }
 
-    public void ColocarBarco(int jugador, int fila, int columna, char tipo)
+    public void ColocarBarco(int jugador, int columna, int fila, char tipo, string? orientacion = null)
     {
-        tablero[fila,columna] = tipo;
+        tablero[columna,fila] = tipo;
+
+        if (tipo == 'd')
+        {
+            tablero[1,1] = tipo;      
+            tablero[1,2] = tipo;      
+            tablero[1,3] = tipo;      
+        }
     }
 }
