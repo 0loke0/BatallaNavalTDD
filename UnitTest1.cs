@@ -1,4 +1,5 @@
-﻿using AwesomeAssertions;
+﻿using System.Text;
+using AwesomeAssertions;
 
 namespace BattleshipsTDD;
 
@@ -32,33 +33,6 @@ public class BattleshipsTest
         tablero.Should().Be(tableroEsperado);
     }
     
-    [Fact]
-    public void Si_SeAgregaUnUnicoJugador_Debe_ElConteoDeJugadoresSerUno()
-    {
-        //Arrange
-        var batallaNaval = new BatallaNaval();
-        
-        //Act
-        batallaNaval.AddPlayer();
-        
-        //Assert
-        batallaNaval.cantidadJugadores.Should().Be(1);
-    }
-    
-    [Fact]
-    public void Si_SeAgregaDosJugadores_Debe_ElConteoDeJugadoresSerDos()
-    {
-        //Arrange
-        var batallaNaval = new BatallaNaval();
-        
-        //Act
-        batallaNaval.AddPlayer();
-        batallaNaval.AddPlayer();
-        
-        //Assert
-        batallaNaval.cantidadJugadores.Should().Be(2);
-    }
-
     [Fact] public void Si_ElJugador1AgregaUnaCañoneraEnPosicion0_0_Debe_AparecerEnElTableroDelJugador1LaPosicion0_0LaCañonera()
     {
         //Arrange
@@ -293,58 +267,67 @@ public class BattleshipsTest
 
 public class BatallaNaval
 {
-    public int cantidadJugadores = 0;
-    public string textoTablero = "";
-    public char[,] tableroGenerico;
-    public Dictionary<int, char [,]> jugadores = new ();
+    private char[,] _tableroGenerico;
+    private Dictionary<int, char [,]> _jugadores = new ();
     
     public BatallaNaval(int filasTablero = 10,int columnasTablero = 10)
     {
-        tableroGenerico = new char[filasTablero, columnasTablero];
+        _tableroGenerico = new char[filasTablero, columnasTablero];
         LlenarTableroGenericoConEspacios();
     }
     private void LlenarTableroGenericoConEspacios()
     {
-        for (int i = 0; i <tableroGenerico.GetLength(1); i++) {
-            for (int j = 0; j < tableroGenerico.GetLength(0); j++) {
-                tableroGenerico[i,j]= ' ';
+        for (int i = 0; i <_tableroGenerico.GetLength(1); i++) {
+            for (int j = 0; j < _tableroGenerico.GetLength(0); j++) {
+                _tableroGenerico[i,j]= ' ';
             }
         }
     }
     public string Print(int jugador = 1)
     { 
         char[,] tableroJugadorSeleccionado = ObtenerTableroJugador(jugador);
-        // | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |\n
-        string texto = "   |";
-        for (int j = 0; j < tableroJugadorSeleccionado.GetLength(0); j++) //FilasEncabezado
-        {
-            texto += $" {j} |";
-        }
-        texto += "\n";
-        
+        var generadorTableroEnTexto = new StringBuilder("   |");
+        generadorTableroEnTexto.Append(GenerarEncabezadoRepresentacionTablero(tableroJugadorSeleccionado));
+        generadorTableroEnTexto.Append(GenerarCuerpoRepresentacionTablero(tableroJugadorSeleccionado));
+        return generadorTableroEnTexto.ToString();
+    }
+
+    private static string GenerarCuerpoRepresentacionTablero(char[,] tableroJugadorSeleccionado)
+    {
+        StringBuilder generadorCuerpo = new StringBuilder(); 
         for (int x = 0; x < tableroJugadorSeleccionado.GetLength(1); x++) //Columnas
         {
-            texto += $" {x} |";
+            generadorCuerpo.Append($" {x} |");
             for (int y = 0; y < tableroJugadorSeleccionado.GetLength(0); y++) //Filas
             {
-                texto += $" {tableroJugadorSeleccionado[x,y]} |";
+                generadorCuerpo.Append($" {tableroJugadorSeleccionado[x,y]} |");
             }
-            texto += "\n";
+            generadorCuerpo.Append('\n');
         }
-        textoTablero = texto;
-        
-        return textoTablero;
+
+        return generadorCuerpo.ToString();
+    }
+
+    private static string GenerarEncabezadoRepresentacionTablero(char[,] tableroJugadorSeleccionado)
+    {
+        StringBuilder generadorEncabezado = new StringBuilder();
+        for (int j = 0; j < tableroJugadorSeleccionado.GetLength(0); j++) //FilasEncabezado
+        {
+            generadorEncabezado.Append($" {j} |");
+        }
+
+        generadorEncabezado.Append('\n');
+        return generadorEncabezado.ToString();
     }
 
     private char[,] ObtenerTableroJugador(int jugador)
     {
-        return jugadores.GetValueOrDefault(jugador)!;
+        return _jugadores.GetValueOrDefault(jugador)!;
     }
 
     public void AddPlayer()
     {
-        cantidadJugadores++;
-        jugadores.Add(cantidadJugadores, (char[,])tableroGenerico.Clone());
+        _jugadores.Add(_jugadores.Count+1, (char[,])_tableroGenerico.Clone());
     }
 
     public void ColocarBarco(int jugador, int columna, int fila, TipoBarco tipo, TipoOrientacion? orientacion = null)
