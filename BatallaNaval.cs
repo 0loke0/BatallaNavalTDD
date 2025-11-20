@@ -131,4 +131,17 @@ public class BatallaNaval
         if (_jugadorActual == _jugadores.Count) return 1;
         return _jugadorActual + 1;
     }
+
+    public Informe InformeGeneral()
+    {
+        return new() { DisparosRecibidos = 0, DisparosAsertadosEnemigo = 0, DisparosFalladosEnemigo = 0, RepresentacionTablero = Print(1)};
+    }
+}
+
+public class Informe
+{
+    public int DisparosRecibidos { get; set; }
+    public int DisparosAsertadosEnemigo { get; set; }
+    public int DisparosFalladosEnemigo { get;  set; }
+    public string RepresentacionTablero { get; set; }
 }
