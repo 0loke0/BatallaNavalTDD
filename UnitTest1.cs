@@ -458,7 +458,7 @@ public class BattleshipsTest
         batallaNaval.Fire(fila: 1, columna: 1);
 
         //Act
-        var informe = batallaNaval.InformeGeneral();
+        var informe = batallaNaval.InformeGeneral()[1];
         var disparosRecibidos = informe.DisparosRecibidos;
         var disparosAsertadosEnemigo = informe.DisparosAsertadosEnemigo;
         var disparosFalladosEnemigo = informe.DisparosFalladosEnemigo;
@@ -499,7 +499,7 @@ public class BattleshipsTest
         batallaNaval.Fire(fila: 1, columna: 1);
 
         //Act
-        var informe = batallaNaval.InformeGeneral();
+        var informe = batallaNaval.InformeGeneral()[1];
         var disparosRecibidos = informe.DisparosRecibidos;
         var disparosAsertadosEnemigo = informe.DisparosAsertadosEnemigo;
         var disparosFalladosEnemigo = informe.DisparosFalladosEnemigo;
@@ -522,5 +522,56 @@ public class BattleshipsTest
         disparosAsertadosEnemigo.Should().Be(0);
         disparosFalladosEnemigo.Should().Be(1);
     }
+
+[Fact]
+    public void Si_ElSeSolicitaElInformeGeneralDelJuegoYExistenDosJugadoresElInforme_Debe_MostrarLaRepresentacionDelTableroDeLosDosJugadores()
+    {
+       //Arrange
+        var batallaNaval = new BatallaNaval();
+        batallaNaval.AddPlayer();
+        batallaNaval.AddPlayer();
+        batallaNaval.ColocarBarco(jugador: 1, fila: 3, columna: 3, tipo: TipoBarco.Cañonero);
+        batallaNaval.ColocarBarco(jugador: 2, fila: 1, columna: 1, tipo: TipoBarco.Cañonero);
+        batallaNaval.Start();
+        batallaNaval.Fire(fila: 2, columna: 2);
+        batallaNaval.EndTurn();
+        batallaNaval.Fire(fila: 0, columna: 0);
+        batallaNaval.EndTurn();
+        batallaNaval.Fire(fila: 1, columna: 1);
+
+        //Act
+        var informe = batallaNaval.InformeGeneral();
+        var tableroJugador1 = informe[1].RepresentacionTablero;
+        var tableroJugador2 = informe[2].RepresentacionTablero;
+
+        //Assert 
+        string tableroEsperadoJugador1 = "   | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |\n" +
+                                         " 0 | o |   |   |   |   |   |   |   |   |   |\n" +
+                                         " 1 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                         " 2 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                         " 3 |   |   |   | g |   |   |   |   |   |   |\n" +
+                                         " 4 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                         " 5 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                         " 6 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                         " 7 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                         " 8 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                         " 9 |   |   |   |   |   |   |   |   |   |   |\n";
+
+
+        string tableroEsperadoJugador2 = "   | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |\n" +
+                                         " 0 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                         " 1 |   | X |   |   |   |   |   |   |   |   |\n" +
+                                         " 2 |   |   | o |   |   |   |   |   |   |   |\n" +
+                                         " 3 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                         " 4 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                         " 5 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                         " 6 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                         " 7 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                         " 8 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                         " 9 |   |   |   |   |   |   |   |   |   |   |\n";
+        tableroJugador1.Should().Be(tableroEsperadoJugador1);
+        tableroJugador2.Should().Be(tableroEsperadoJugador2);
+    }
+    
     
 }

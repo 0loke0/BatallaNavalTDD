@@ -111,20 +111,8 @@ public class BatallaNaval
         return _jugadorActual + 1;
     }
 
-    public Informe InformeGeneral()
-    {
-        return ObtenerInformeJugador(_jugadorActual);
+    public Dictionary<int,Informe> InformeGeneral()
+    {    
+        return  _jugadores.ToDictionary(jugador => jugador.Key, jugador => jugador.Value.ObtenerInforme());
     }
-}
-
-public class Informe
-{    
-    public int DisparosRecibidos { get; set; }
-    public int DisparosAsertadosEnemigo { get; set; }
-    public int DisparosFalladosEnemigo { get;  set; }
-    public string RepresentacionTablero { get; set; }
-
-    
-    
-
 }

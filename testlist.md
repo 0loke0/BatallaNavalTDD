@@ -9,3 +9,8 @@ al colocar barcos se pueden sobre poner en ellos
 No se puede colocar barcos ni pintar tableros de jugadores que no existan
 la partida no deberia iniciar si todos los jugadores no tienen barcos en su tablero
 se debe evaluar que no se dispare fuera del tablero
+
+El informe General no se puede consultar mientras la partida esta en curso
+
+
+El juego debe finalizar si uno de los jugadores ya no tiene barcos en su tablero
