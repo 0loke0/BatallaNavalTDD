@@ -482,4 +482,45 @@ public class BattleshipsTest
         disparosRecibidos.Should().Be(0);
     }
     
+    [Fact]
+    public void Si_ElJugador1ColocoUnaCañoneraEnPosicion3_3YElJugador2ColocoUnaCañoneraEnPosicion1_1YElJugador1RealizaUnAtaqueEnPosicion_2_2YElJugador1RealizaUnAtaqueEnPosicion_0_0YElJugador1RealizaUnAtaqueEnPosicion_1_1_Debe_ElInformeGeneralDelJugador1Tener1DisparosRecibidos0DisparosAsertadosEnemigo1DisparosFalladosEnemigoYEnTableroConPosicion3_3UnaCañonera()
+    {
+        //Arrange
+        var batallaNaval = new BatallaNaval();
+        batallaNaval.AddPlayer();
+        batallaNaval.AddPlayer();
+        batallaNaval.ColocarBarco(jugador: 1, fila: 3, columna: 3, tipo: TipoBarco.Cañonero);
+        batallaNaval.ColocarBarco(jugador: 2, fila: 1, columna: 1, tipo: TipoBarco.Cañonero);
+        batallaNaval.Start();
+        batallaNaval.Fire(fila: 2, columna: 2);
+        batallaNaval.EndTurn();
+        batallaNaval.Fire(fila: 0, columna: 0);
+        batallaNaval.EndTurn();
+        batallaNaval.Fire(fila: 1, columna: 1);
+
+        //Act
+        var informe = batallaNaval.InformeGeneral();
+        var disparosRecibidos = informe.DisparosRecibidos;
+        var disparosAsertadosEnemigo = informe.DisparosAsertadosEnemigo;
+        var disparosFalladosEnemigo = informe.DisparosFalladosEnemigo;
+        var tablero = informe.RepresentacionTablero;
+
+        //Assert 
+        string tableroEsperado = "   | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |\n" +
+                                 " 0 | o |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 1 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 2 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 3 |   |   |   | g |   |   |   |   |   |   |\n" +
+                                 " 4 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 5 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 6 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 7 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 8 |   |   |   |   |   |   |   |   |   |   |\n" +
+                                 " 9 |   |   |   |   |   |   |   |   |   |   |\n";
+        tablero.Should().Be(tableroEsperado);
+        disparosRecibidos.Should().Be(1);
+        disparosAsertadosEnemigo.Should().Be(0);
+        disparosFalladosEnemigo.Should().Be(1);
+    }
+    
 }

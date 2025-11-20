@@ -5,7 +5,7 @@ namespace BattleshipsTDD;
 public class BatallaNaval
 {
     private char[,] _tableroGenerico;
-    private Dictionary<int, char[,]> _jugadores = new();
+    private Dictionary<int,Jugador> _jugadores = new();
     private int _jugadorActual;
 
     public BatallaNaval(int filasTablero = 10, int columnasTablero = 10)
@@ -27,50 +27,26 @@ public class BatallaNaval
 
     public string Print(int jugador = 1)
     {
-        char[,] tableroJugadorSeleccionado = ObtenerTableroJugador(jugador);
-        var generadorTableroEnTexto = new StringBuilder("   |");
-        generadorTableroEnTexto.Append(GenerarEncabezadoRepresentacionTablero(tableroJugadorSeleccionado));
-        generadorTableroEnTexto.Append(GenerarCuerpoRepresentacionTablero(tableroJugadorSeleccionado));
-        return generadorTableroEnTexto.ToString();
-    }
-
-    private static string GenerarCuerpoRepresentacionTablero(char[,] tableroJugadorSeleccionado)
-    {
-        StringBuilder generadorCuerpo = new StringBuilder();
-        for (int x = 0; x < tableroJugadorSeleccionado.GetLength(1); x++) //Columnas
-        {
-            generadorCuerpo.Append($" {x} |");
-            for (int y = 0; y < tableroJugadorSeleccionado.GetLength(0); y++) //Filas
-            {
-                generadorCuerpo.Append($" {tableroJugadorSeleccionado[x, y]} |");
-            }
-
-            generadorCuerpo.Append('\n');
-        }
-
-        return generadorCuerpo.ToString();
-    }
-
-    private static string GenerarEncabezadoRepresentacionTablero(char[,] tableroJugadorSeleccionado)
-    {
-        StringBuilder generadorEncabezado = new StringBuilder();
-        for (int j = 0; j < tableroJugadorSeleccionado.GetLength(0); j++) //FilasEncabezado
-        {
-            generadorEncabezado.Append($" {j} |");
-        }
-
-        generadorEncabezado.Append('\n');
-        return generadorEncabezado.ToString();
+       return ObtenerInformeJugador(jugador).RepresentacionTablero;
     }
 
     private char[,] ObtenerTableroJugador(int jugador)
+    {
+        return _jugadores.GetValueOrDefault(jugador)!.Tablero;
+    }
+    private Informe ObtenerInformeJugador(int jugador)
+    {
+        return _jugadores.GetValueOrDefault(jugador).ObtenerInforme();
+    }
+    
+    private Jugador ObtenerJugador(int jugador)
     {
         return _jugadores.GetValueOrDefault(jugador)!;
     }
 
     public void AddPlayer()
     {
-        _jugadores.Add(_jugadores.Count + 1, (char[,])_tableroGenerico.Clone());
+        _jugadores.Add(_jugadores.Count + 1, new Jugador((char[,])_tableroGenerico.Clone()));
     }
 
     public void ColocarBarco(int jugador, int columna, int fila, TipoBarco tipo, TipoOrientacion? orientacion = null)
@@ -104,21 +80,24 @@ public class BatallaNaval
 
     public void Fire(int fila, int columna)
     {
-        var jugadorAtacado = ObtenerSiguienteJugador();
-        var tableroJugadorAtacado = ObtenerTableroJugador(jugadorAtacado);
-
-        var posicionAtacada = tableroJugadorAtacado[columna, fila];
-        if (posicionAtacada == ' ')
+        var identificarJugadorAAtacar = ObtenerSiguienteJugador();
+        var JugadorAtacado = ObtenerJugador(identificarJugadorAAtacar);
+        var posicionAtacada = JugadorAtacado.Tablero[columna, fila];
+        var barcoFueInpactado = posicionAtacada != ' ';
+        
+        if (barcoFueInpactado)
         {
-            tableroJugadorAtacado[columna, fila] = 'o';
+            if (posicionAtacada is (char)TipoBarco.PortaAviones or (char)TipoBarco.Destructor)
+                JugadorAtacado.Tablero[columna, fila] = 'x';
+            else
+                JugadorAtacado.Tablero[columna, fila] = 'X';
         }
         else
         {
-            if (posicionAtacada is (char)TipoBarco.PortaAviones or (char)TipoBarco.Destructor)
-                tableroJugadorAtacado[columna, fila] = 'x';
-            else
-                tableroJugadorAtacado[columna, fila] = 'X';
+            JugadorAtacado.Tablero[columna, fila] = 'o';
         }
+
+        JugadorAtacado.RecibirDisparo(barcoFueInpactado);
     }
 
     public void EndTurn()
@@ -134,14 +113,18 @@ public class BatallaNaval
 
     public Informe InformeGeneral()
     {
-        return new() { DisparosRecibidos = 0, DisparosAsertadosEnemigo = 0, DisparosFalladosEnemigo = 0, RepresentacionTablero = Print(1)};
+        return ObtenerInformeJugador(_jugadorActual);
     }
 }
 
 public class Informe
-{
+{    
     public int DisparosRecibidos { get; set; }
     public int DisparosAsertadosEnemigo { get; set; }
     public int DisparosFalladosEnemigo { get;  set; }
     public string RepresentacionTablero { get; set; }
+
+    
+    
+
 }
